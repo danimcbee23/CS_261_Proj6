@@ -3,7 +3,7 @@
 # Course: CS261 - Data Structures
 # Assignment: 6
 # Due Date: 3/14/24
-# Description: Implementation of a hash map with chaining colision resolution
+# Description: Implementation of a hash map with chaining collision resolution
 
 
 from a6_include import (DynamicArray, LinkedList,
