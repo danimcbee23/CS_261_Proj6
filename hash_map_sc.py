@@ -258,7 +258,10 @@ def find_mode(da: DynamicArray) -> tuple[DynamicArray, int]:
         if mode_val.get_at_index(i)[1] == mode_freq:
             mode_arr.append(mode_val.get_at_index(i)[0])
 
-    return mode_arr, mode_freq
+    if mode_arr.length() > 1:
+        return mode_arr, mode_freq
+    else:
+        return mode_arr.get_at_index(0), mode_freq
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
