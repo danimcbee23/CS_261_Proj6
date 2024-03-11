@@ -237,41 +237,30 @@ def find_mode(da: DynamicArray) -> tuple[DynamicArray, int]:
     # Create instance of Separate Chaining HashMap
     map = HashMap()
 
-    # Set up Pointers
-    arr_len = da.length()
-    max_cnt = 1
-    curr_cnt = 1
-    last_val = da[arr_len - 1]
-    mode_arr = DynamicArray()
-
-    # Iterate through da comparing current and next keys
-    for i in range(0, arr_len - 1):
-        curr_key = da[i]
-        next_key = da[i + 1]
-        # Keys the same update mode counter
-        if curr_key == next_key:
-            curr_cnt += 1
-        # Key not the same
+    # Count frequency of each element
+    for i in range(da.length()):
+        # Element not found frequency = 1
+        if not map.contains_key(da.get_at_index(i)):
+            map.put(da.get_at_index(i), 1)
+        # Element found frequency += 1
         else:
-            # Key
-            if curr_cnt > max_cnt:
-                mode_val = curr_key
-                max_cnt = curr_cnt
-                mode_arr = DynamicArray()
-                mode_arr.append(mode_val)
-            elif curr_cnt == max_cnt:
-                mode_arr.append(curr_key)
-            curr_cnt = 1
+            map.put(da.get_at_index(i), map.get(da.get_at_index(i)) + 1)
+    
+    arr = map.get_keys_and_values()
+    mode_arr = DynamicArray()
+    mode_freq = 0
 
-    if curr_cnt > max_cnt:
-        max_cnt = curr_cnt
-        mode_val = last_val
-        mode_arr = DynamicArray()
-        mode_arr.append(mode_val)
-    elif curr_cnt == max_cnt:
-        mode_arr.append(last_val)
+    # Find max frequency
+    for i in range(arr.length()):
+        if mode_freq < arr.get_at_index(i)[1]:
+            mode_freq = arr.get_at_index(i)[1]
 
-    return mode_arr, max_cnt
+    # Locate all elements with max frequency
+    for i in range(arr.length()):
+        if arr.get_at_index(i)[1] == mode_freq:
+            mode_arr.append(arr.get_at_index(i)[0])
+
+    return mode_arr, mode_freq
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
