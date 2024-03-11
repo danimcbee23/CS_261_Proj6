@@ -96,25 +96,22 @@ class HashMap:
         if self.table_load() >= 1.0:
             self.resize_table(self._capacity * 2)
 
-        # Calculate hash key
-        hash_key = self._hash_function(key)
-
         # Map hash key to index & locate bucket
-        hash_index = hash_key % self._capacity
-        hash_bucket = self._buckets.get_at_index(hash_index)
+        hash_key = self._hash_function(key) % self._capacity
+        chain_key = self._buckets.get_at_index(hash_key)
 
         # Insert key/value pair
-        if hash_bucket.length() == 0:
-            hash_bucket.insert(key, value)
+        if chain_key.length() == 0:
+            chain_key.insert(key, value)
             self._size += 1
         # Key already present in hash map, update value
         else:
-            for element in hash_bucket:
+            for element in chain_key:
                 if element.key == key:
-                    hash_bucket.remove(key)
-                    hash_bucket.insert(key, value)
+                    chain_key.remove(key)
+                    chain_key.insert(key, value)
                     return
-                hash_bucket.insert(key, value)
+                chain_key.insert(key, value)
                 self._size += 1
 
     def resize_table(self, new_capacity: int) -> None:
@@ -245,7 +242,7 @@ def find_mode(da: DynamicArray) -> tuple[DynamicArray, int]:
         # Element found frequency += 1
         else:
             map.put(da.get_at_index(i), map.get(da.get_at_index(i)) + 1)
-    
+
     arr = map.get_keys_and_values()
     mode_arr = DynamicArray()
     mode_freq = 0
