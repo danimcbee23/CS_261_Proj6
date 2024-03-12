@@ -124,8 +124,8 @@ class HashMap:
 
         new_table = HashMap(new_capacity, self._hash_function)
 
-        if new_capacity == 2:
-            new_table._capacity = 2
+        # if new_capacity == 2:
+        #     new_table._capacity = 2
 
         for i in range(self._capacity):
             if self._buckets.get_at_index(i).length() > 0:
