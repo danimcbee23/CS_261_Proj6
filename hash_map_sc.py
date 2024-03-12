@@ -112,11 +112,10 @@ class HashMap:
                 if element.key == key:
                     hash_bucket.remove(key)
                     hash_bucket.insert(key, value)
-                    self._size += 1
                     return
                 else:
                     hash_bucket.insert(key, value)
-                    self._size += 1
+            self._size += 1
 
 
     def resize_table(self, new_capacity: int) -> None:
