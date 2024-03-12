@@ -102,21 +102,15 @@ class HashMap:
 
         hash_bucket = self._buckets.get_at_index(hash_index)
 
-        # Insert key/value pair
-        if hash_bucket.length() == 0:
-            hash_bucket.insert(key, value)
-            self._size += 1
-        # Key already present in hash map, update value
-        else:
-            for element in hash_bucket:
-                if element.key == key:
-                    hash_bucket.remove(key)
-                    hash_bucket.insert(key, value)
-                    return
-                else:
-                    hash_bucket.insert(key, value)
-            self._size += 1
+        # Key found, update value
+        for element in hash_bucket:
+            if element.key == key:
+                element.value = value
+                return
 
+        # Key not found, insert new pair
+        hash_bucket.insert(key, value)
+        self._size += 1
 
     def resize_table(self, new_capacity: int) -> None:
         """ Resize hash table capacity """
