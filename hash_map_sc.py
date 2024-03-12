@@ -93,8 +93,8 @@ class HashMap:
          if key in hash map update value """
 
         # Resize table if load factor is greater than/equal to 1.0
-        # if self.table_load() >= 1.0:
-        #     self.resize_table(self._capacity * 2)
+        if self.table_load() >= 1.0:
+            self.resize_table(self._capacity * 2)
 
         # Calculate hash index
         hash_key = self._hash_function(key)
@@ -115,7 +115,7 @@ class HashMap:
                     return
                 else:
                     hash_bucket.insert(key, value)
-                    self._size += 1
+                    # self._size += 1
 
     def resize_table(self, new_capacity: int) -> None:
         """ Resize hash table capacity """
