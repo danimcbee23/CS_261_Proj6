@@ -130,8 +130,7 @@ class HashMap:
         for i in range(self._capacity):
             if self._buckets.get_at_index(i).length() > 0:
                 for element in self._buckets.get_at_index(i):
-                    hash_index = self._hash_function(element.key) % new_capacity
-                    new_table._buckets.get_at_index(hash_index).insert(element.key, element.value)
+                    new_table.put(element.key, element.value)
 
         self._buckets = new_table._buckets
         self._size = new_table._size
