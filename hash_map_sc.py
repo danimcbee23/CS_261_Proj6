@@ -133,9 +133,19 @@ class HashMap:
                     new_table.put(element.key, element.value)
 
         # Update table attributes
-        self._buckets = new_table._buckets
+        self._buckets = DynamicArray()
+        new_capacity = new_table._buckets.length()
+
+        # Copy buckets from new_table
+        for i in range(new_capacity):
+            self._buckets.append(LinkedList())
+            curr_bucket = new_table._buckets.get_at_index(i)
+            for element in curr_bucket:
+                self._buckets[i].insert(element.key, element.value)
+
+        # Update pointers
         self._size = new_table._size
-        self._capacity = new_table._capacity
+        self._capacity = new_capacity
 
     def table_load(self) -> float:
         """ Return the current load factor of hash table """
