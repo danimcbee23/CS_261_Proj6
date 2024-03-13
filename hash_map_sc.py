@@ -117,8 +117,8 @@ class HashMap:
         """ Resize hash table capacity """
 
         # Return if capacity < 1
-        # if new_capacity < 1:
-        #     return
+        if new_capacity < 1:
+            return
 
         # Ensure new capacity is prime
         if not self._is_prime(new_capacity):
