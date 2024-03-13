@@ -3,7 +3,7 @@
 # Course: CS261 - Data Structures
 # Assignment: 6
 # Due Date: 3/14/24
-# Description: Implementation of a hash map with open addressing with quadratice
+# Description: Implementation of a hash map with open addressing with quadratic
 # probing collision resolution
 
 
@@ -223,7 +223,7 @@ class HashMap:
     def __iter__(self):
         """ Creates iterator """
 
-        self.index = 0
+        self._index = 0
 
         return self
 
@@ -233,11 +233,11 @@ class HashMap:
         try:
             value = None
             while value is None or value.is_tombstone is True:
-                value = self._buckets.get_at_index(self.index)
-                self.index += 1
+                value = self._buckets.get_at_index(self._index)
+                self._index += 1
         except DynamicArrayException:
             raise StopIteration
-        
+
         return value
 
 
