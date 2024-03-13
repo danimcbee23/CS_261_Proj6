@@ -92,7 +92,7 @@ class HashMap:
         """ If key not in hash map add key/value pair
          if key in hash map update value """
 
-        # Resize table if load factor is greater than/equal to 1.0
+        # Resize table if load factor >= 1.0
         if self.table_load() >= 1.0:
             self.resize_table(self._capacity * 2)
 
@@ -100,6 +100,7 @@ class HashMap:
         hash_key = self._hash_function(key)
         hash_index = hash_key % self._capacity
 
+        # Set pointer
         hash_bucket = self._buckets.get_at_index(hash_index)
 
         # Key found, update value
@@ -116,16 +117,20 @@ class HashMap:
         """ Resize hash table capacity """
 
         # Return if capacity < 1
-        if new_capacity < 1:
-            return
+        # if new_capacity < 1:
+        #     return
 
+        # Ensure new capacity is prime
         if not self._is_prime(new_capacity):
             new_capacity = self._next_prime(new_capacity)
 
+        # Create new hash map
         new_table = HashMap(new_capacity, self._hash_function)
 
+        # Handle when capacity needs to = 2
         if new_capacity == 2:
             new_table._capacity = 2
+
 
         for i in range(self._capacity):
             if self._buckets.get_at_index(i).length() > 0:
@@ -144,15 +149,7 @@ class HashMap:
     def empty_buckets(self) -> int:
         """ Return # of empty buckets in hash table """
 
-        # Initialize counter
-        bucket_count = 0
-
-        # If bucket empty update count
-        for i in range(self._capacity):
-            if self._buckets.get_at_index(i).length() == 0:
-                bucket_count += 1
-
-        return bucket_count
+        return self._capacity - self._size
 
     def get(self, key: str):
         """ Return value of given key """
