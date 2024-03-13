@@ -131,12 +131,13 @@ class HashMap:
         if new_capacity == 2:
             new_table._capacity = 2
 
-
+        # Insert elements into new table
         for i in range(self._capacity):
             if self._buckets.get_at_index(i).length() > 0:
                 for element in self._buckets.get_at_index(i):
                     new_table.put(element.key, element.value)
 
+        # Reassigning new values to self
         self._buckets = new_table._buckets
         self._size = new_table._size
         self._capacity = new_table.get_capacity()
