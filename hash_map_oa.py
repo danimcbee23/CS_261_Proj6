@@ -3,8 +3,8 @@
 # Course: CS261 - Data Structures
 # Assignment: 6
 # Due Date: 3/14/24
-# Description: Implementation of a hash map with open addressing with quadratic
-# probing 
+# Description: Implementation of a hash map with open addressing with quadratice
+# probing collision resolution
 
 
 from a6_include import (DynamicArray, DynamicArrayException, HashEntry,
@@ -129,64 +129,116 @@ class HashMap:
             self._size += 1
 
     def resize_table(self, new_capacity: int) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ Resize hash table capacity """
+
+        # Check if new capacity <= current number of elements
+        if new_capacity <= self._size:
+            return
+
+        # Ensure new capacity is prime
+        if not self._is_prime(new_capacity):
+            new_capacity = self._next_prime(new_capacity)
+
+        # Create new hash map
+        new_table = HashMap(new_capacity, self._hash_function)
+
+        # Handle when capacity needs to = 2
+        if new_capacity == 2:
+            new_table._capacity = 2
+
+        # Insert elements into new table
+        for element in self:
+            if element is not None:
+                new_table.put(element.key, element.value)
+
+        # Reassigning new values to self
+        self._buckets = new_table._buckets
+        self._size = new_table._size
+        self._capacity = new_table.get_capacity()
 
     def table_load(self) -> float:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ Return the current load factor of hash table """
+
+        return self._size/self._capacity
 
     def empty_buckets(self) -> int:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ Return # of empty buckets in hash table """
+
+        return self._capacity - self._size
 
     def get(self, key: str) -> object:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ Return value of given key """
+
+        # Element located, return value
+        for element in self:
+            if element.key == key:
+                return element.value
+
+        # Element not located
+        return None
 
     def contains_key(self, key: str) -> bool:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ Return T if key in hash map else return F """
+
+        # Element located
+        for element in self:
+            if element.key == key and not element.is_tombstone:
+                return True
+
+        # Element not located
+        return False
 
     def remove(self, key: str) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ If key is in hash map remove key/value pair """
+
+        # Element located, set as tombstone
+        for element in self:
+            if element.key == key and not element.is_tombstone:
+                element.is_tombstone = True
+                self._size -= 1
 
     def get_keys_and_values(self) -> DynamicArray:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ Return a tuple of key/value pair """
+
+        key_val_pair = DynamicArray()
+
+        # Element located, add to Dynamic Array
+        for element in self:
+            if element is not None and not element.is_tombstone:
+                key_val_pair.append((element.key, element.value))
+
+        return key_val_pair
 
     def clear(self) -> None:
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ Clear contents of hash map, keeps capacity """
+
+        # Update map attributes
+        self._buckets = DynamicArray()
+        self._size = 0
+
+        # Update buckets
+        for _ in range(self._capacity):
+            self._buckets.append(None)
 
     def __iter__(self):
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ Creates iterator """
+
+        self.index = 0
+
+        return self
 
     def __next__(self):
-        """
-        TODO: Write this implementation
-        """
-        pass
+        """ Return the next item in Hash Map """
+
+        try:
+            value = None
+            while value is None or value.is_tombstone is True:
+                value = self._buckets.get_at_index(self.index)
+                self.index += 1
+        except DynamicArrayException:
+            raise StopIteration
+        
+        return value
 
 
 # ------------------- BASIC TESTING ---------------------------------------- #
