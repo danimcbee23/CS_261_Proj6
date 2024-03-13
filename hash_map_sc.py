@@ -150,7 +150,14 @@ class HashMap:
     def empty_buckets(self) -> int:
         """ Return # of empty buckets in hash table """
 
-        return self._capacity - self._size
+        bucket_count = 0
+
+        # If bucket empty update count
+        for i in range(self._capacity):
+            if self._buckets.get_at_index(i).length() == 0:
+                bucket_count += 1
+
+        return bucket_count
 
     def get(self, key: str):
         """ Return value of given key """
