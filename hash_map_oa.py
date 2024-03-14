@@ -101,13 +101,16 @@ class HashMap:
         hash_bucket = self._buckets[hash_index]
 
         count = 1
+        # Locate empty index or tombstone
         while hash_bucket is not None and (hash_bucket.key != key or hash_bucket.is_tombstone):
             hash_index = (hash_key + count * count) % self._capacity
             hash_bucket = self._buckets[hash_index]
             count += 1
 
+        # Key found, update value
         if hash_bucket is not None and not hash_bucket.is_tombstone:
             self._buckets[hash_index].value = value
+        # Insert new key/value pair
         else:
             self._buckets[hash_index] = HashEntry(key, value)
             self._size += 1
@@ -132,13 +135,13 @@ class HashMap:
 
         # Insert elements into new table
         for element in self:
-            if element is not None:
+            if element is not None and not element.is_tombstone:
                 new_table.put(element.key, element.value)
 
         # Reassigning new values to self
         self._buckets = new_table._buckets
-        self._size = new_table._size
-        self._capacity = new_table.get_capacity()
+        self._size = new_table.get_size()
+        self._capacity = new_capacity
 
     def table_load(self) -> float:
         """ Return the current load factor of hash table """
