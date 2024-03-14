@@ -95,38 +95,27 @@ class HashMap:
         if self.table_load() >= 0.5:
             self.resize_table(self._capacity * 2)
 
-        # Calculate hash index
         hash_key = self._hash_function(key)
         hash_index = hash_key % self._capacity
 
-        # Set pointer
-        hash_bucket = self._buckets.get_at_index(hash_index)
+        count = 0
+        while self._buckets[hash_index] is not None and count < self._capacity:
+            if self._buckets[hash_index].key == key and not self._buckets[hash_index].is_tombstone:
+                self._buckets[hash_index] = HashEntry(key, value)
+                self._size += 1
+                return
 
-        # Bucket empty, insert key/value pair
-        if hash_bucket is None:
-            self._buckets.set_at_index(hash_index, HashEntry(key, value))
-            self._size += 1
-        else:
-            count = 1
-            while self._buckets.get_at_index(hash_index):
-                # Key found in Hash Map, update value
-                if self._buckets.get_at_index(hash_index).key == key:
-                    # Hash index is tombstone
-                    if self._buckets.get_at_index(hash_index).is_tombstone:
-                        self._buckets.set_at_index(hash_index, HashEntry(key, value))
-                        self._size += 1
-                        self._buckets.get_at_index(hash_index).is_tombstone = False
-                    # Hash index is not tombstone
-                    else:
-                        self._buckets.set_at_index(hash_index, HashEntry(key, value))
-                    return
-                # Find the next index
-                hash_index = (hash_index + count ** 2) % self._capacity
-                count += 1
+            if self._buckets[hash_index].is_tombstone:
+                self._buckets[hash_index] = HashEntry(key, value)
+                self._size += 1
+                return
 
-            # Key not found in Hash Map, insert key/value pair at index
-            self._buckets.set_at_index(hash_index, HashEntry(key, value))
-            self._size += 1
+            hash_index = (hash_index + count ** 2) % self._capacity
+            count += 1
+
+        self._buckets[hash_index] = HashEntry(key, value)
+        self._size += 1
+
 
     def resize_table(self, new_capacity: int) -> None:
         """ Resize hash table capacity """
