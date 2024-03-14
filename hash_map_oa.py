@@ -95,27 +95,22 @@ class HashMap:
         if self.table_load() >= 0.5:
             self.resize_table(self._capacity * 2)
 
+        # Calculate hash index
         hash_key = self._hash_function(key)
         hash_index = hash_key % self._capacity
+        hash_bucket = self._buckets[hash_index]
 
-        count = 0
-        while self._buckets[hash_index] is not None and count < self._capacity:
-            if self._buckets[hash_index].key == key and not self._buckets[hash_index].is_tombstone:
-                self._buckets[hash_index] = HashEntry(key, value)
-                self._size += 1
-                return
-
-            if self._buckets[hash_index].is_tombstone:
-                self._buckets[hash_index] = HashEntry(key, value)
-                self._size += 1
-                return
-
-            hash_index = (hash_index + count ** 2) % self._capacity
+        count = 1
+        while hash_bucket is not None and (hash_bucket.key != key or hash_bucket.is_tombstone):
+            hash_index = (hash_key + count * count) % self._capacity
+            hash_bucket = self._buckets[hash_index]
             count += 1
 
-        self._buckets[hash_index] = HashEntry(key, value)
-        self._size += 1
-
+        if hash_bucket is not None and not hash_bucket.is_tombstone:
+            self._buckets[hash_index].value = value
+        else:
+            self._buckets[hash_index] = HashEntry(key, value)
+            self._size += 1
 
     def resize_table(self, new_capacity: int) -> None:
         """ Resize hash table capacity """
