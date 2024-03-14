@@ -117,31 +117,25 @@ class HashMap:
 
     def resize_table(self, new_capacity: int) -> None:
         """ Resize hash table capacity """
-
         # Check if new capacity <= current number of elements
         if new_capacity <= self._size:
             return
-
         # Ensure new capacity is prime
         if not self._is_prime(new_capacity):
             new_capacity = self._next_prime(new_capacity)
-
         # Create new hash map
         new_table = HashMap(new_capacity, self._hash_function)
-
         # Handle when capacity needs to = 2
         if new_capacity == 2:
             new_table._capacity = 2
-
         # Insert elements into new table
         for element in self:
-            if element is not None and not element.is_tombstone:
+            if element is not None:
                 new_table.put(element.key, element.value)
-
         # Reassigning new values to self
         self._buckets = new_table._buckets
-        self._size = new_table.get_size()
-        self._capacity = new_capacity
+        self._size = new_table._size
+        self._capacity = new_table.get_capacity()
 
     def table_load(self) -> float:
         """ Return the current load factor of hash table """
