@@ -126,46 +126,22 @@ class HashMap:
         if not self._is_prime(new_capacity):
             new_capacity = self._next_prime(new_capacity)
 
-        # # Create new hash map
-        # new_table = HashMap(new_capacity, self._hash_function)
-        #
-        # # Handle when capacity needs to = 2
-        # if new_capacity == 2:
-        #     new_table._capacity = 2
-        #
-        # # Insert elements into new table
-        # for element in self:
-        #     if element:
-        #         new_table.put(element.key, element.value)
-        #
-        # # Reassigning new values to self
-        # self._buckets = new_table._buckets
-        # self._size = new_table._size
-        # self._capacity = new_table.get_capacity()
+        # Create new hash map
+        new_table = HashMap(new_capacity, self._hash_function)
 
-        oldCapacity = self.get_capacity()
-        tempHM = HashMap(oldCapacity, self._hash_function)
+        # Handle when capacity needs to = 2
+        if new_capacity == 2:
+            new_table._capacity = 2
 
-        # Copies over all the values from the existing HM to the temp holder HM
-        for i in range(oldCapacity):
+        # Insert elements into new table
+        for element in self:
+            if element:
+                new_table.put(element.key, element.value)
 
-            if self._buckets[i] is not None and self._buckets[i].is_tombstone == False:
-                tempHM._buckets[i] = self._buckets[i]
-
-        # Resets current HM to an empty data structure
-        self._buckets = DynamicArray()
-        self._capacity = new_capacity
-        self._size = 0
-
-        # Adds the None values we need we need
-        for _ in range(new_capacity):
-            self._buckets.append(None)
-
-        # Copies over all the values from the temp HM to the existing HM
-        for i in range(oldCapacity):
-
-            if tempHM._buckets[i] is not None:
-                self.put(tempHM._buckets[i].key, tempHM._buckets[i].value)
+        # Reassigning new values to self
+        self._buckets = new_table._buckets
+        self._size = new_table._size
+        self._capacity = new_table.get_capacity()
 
     def table_load(self) -> float:
         """ Return the current load factor of hash table """
